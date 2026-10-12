@@ -1,0 +1,218 @@
+/* css/style.css */
+
+:root {
+  --color-bg: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-text: #222;
+  --color-muted: #777;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-border: #e2e5ea;
+  --radius: 10px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --gap: 12px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+/* === APP LAYOUT === */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  gap: var(--gap);
+  background: var(--color-surface);
+  padding: 24px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.app__header { text-align: center; }
+
+.app__title {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+/* === FORM === */
+.task-form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+}
+
+.task-form__input,
+.task-form__date,
+.controls__search,
+.controls__filter,
+.controls__sort {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+  background: var(--color-surface);
+}
+
+.task-form__submit {
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.task-form__submit:hover { background: var(--color-primary-hover); }
+
+/* === CONTROLS === */
+.controls {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 8px;
+}
+
+/* === LIST === */
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.task-list__empty {
+  text-align: center;
+  color: var(--color-muted);
+  margin: 8px 0;
+}
+
+/* === TASK ITEM === */
+.task {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.task__checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.task__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.task__title {
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.task__date {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.task__edit,
+.task__delete {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.task__delete { color: var(--color-danger); }
+
+/* === DONE STATE === */
+.task--done { opacity: 0.6; }
+.task--done .task__title {
+  text-decoration: line-through;
+  color: var(--color-muted);
+}
+
+/* === EDIT MODE === */
+.task--editing .task__title { display: none; }
+.task__edit-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+  width: 100%;
+}
+.task__edit-input,
+.task__edit-date {
+  padding: 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font: inherit;
+  width: 100%;
+}
+
+/* === DRAGGING === */
+.task--dragging { opacity: 0.4; }
+.task--over { border-color: var(--color-primary); }
+
+/* === FOOTER === */
+.app__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.app__clear-done {
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  color: var(--color-danger);
+}
+
+/* === ADAPTIVE === */
+@media (max-width: 560px) {
+  .task-form {
+    grid-template-columns: 1fr;
+  }
+  .controls {
+    grid-template-columns: 1fr;
+  }
+  .task {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "check body"
+      "actions actions";
+  }
+  .task__checkbox { grid-area: check; }
+  .task__body { grid-area: body; }
+  .task__edit,
+  .task__delete { grid-area: actions; }
+  .task__delete { justify-self: end; }
+  .app__footer { flex-direction: column; align-items: stretch; }
+}
