@@ -208,6 +208,7 @@ ui.form.addEventListener('submit', (e) => {
   }
   addTask(title, ui.dateInput.value);
   ui.form.reset();
+  ui.dateInput.value = new Date().toISOString().slice(0, 10); // ← вернуть сегодня
   ui.taskInput.focus();
 });
 
@@ -230,12 +231,6 @@ ui.clearDoneBtn.addEventListener('click', clearDone);
 
 // === Drag-and-drop ===
 enableDragAndDrop(ui.list, (orderedIds) => {
-  // Пересчитываем order только для видимых.
-  // Скрытые сохраняют свои order, но так как диапазон order
-  // у видимых мог "пересечься" со скрытыми — просто
-  // переустанавливаем order для видимых по индексу,
-  // а скрытым ничего не трогаем (их порядок относительно
-  // друг друга сохраняется).
   orderedIds.forEach((id, index) => {
     const t = tasks.find(x => x.id === id);
     if (t) t.order = index;

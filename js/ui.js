@@ -43,6 +43,7 @@ export function buildUI() {
   dateInput.type = 'date';
   dateInput.className = 'task-form__date';
   dateInput.setAttribute('aria-label', 'Дата задачи');
+  dateInput.value = new Date().toISOString().slice(0, 10); // ← сегодня
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
