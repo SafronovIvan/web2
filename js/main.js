@@ -7,11 +7,8 @@ import { enableDragAndDrop } from './dragdrop.js';
 
 // === Инициализация ===
 const ui = buildUI();
-
-/** @type {Array<{id:string,title:string,date:string,done:boolean,createdAt:number,order:number}>} */
 let tasks = loadTasks();
 
-// Текущее состояние UI
 const state = {
   query: '',
   status: 'all',
@@ -19,17 +16,20 @@ const state = {
   editingId: null,
 };
 
-// === Обновление интерфейса ===
+// === Рендер ===
 function render() {
   const visible = applyFilters(tasks, state);
+
+  // Если редактируемая задача не попала в видимые — выходим из режима
+  if (state.editingId && !visible.some(t => t.id === state.editingId)) {
+    state.editingId = null;
+  }
 
   ui.list.innerHTML = '';
   visible.forEach(task => ui.list.append(renderTask(task)));
 
-  // Пустое состояние
   ui.empty.hidden = visible.length > 0;
 
-  // Счётчик
   const done = tasks.filter(t => t.done).length;
   ui.counter.textContent = `Всего: ${tasks.length} · Выполнено: ${done}`;
 }
@@ -50,12 +50,12 @@ function renderTask(task) {
   checkbox.setAttribute('aria-label', 'Отметить как выполненную');
   checkbox.addEventListener('change', () => toggleDone(task.id));
 
-  // Тело задачи
+  // Тело
   const body = document.createElement('div');
   body.className = 'task__body';
 
   if (state.editingId === task.id) {
-    // --- Режим редактирования ---
+    // Режим редактирования
     const row = document.createElement('div');
     row.className = 'task__edit-row';
 
@@ -63,6 +63,7 @@ function renderTask(task) {
     titleInput.type = 'text';
     titleInput.className = 'task__edit-input';
     titleInput.value = task.title;
+    titleInput.maxLength = 120;
 
     const dateInput = document.createElement('input');
     dateInput.type = 'date';
@@ -82,8 +83,10 @@ function renderTask(task) {
     row.append(titleInput, dateInput, saveBtn, cancelBtn);
     body.append(row);
 
-    // Фокус на поле
-    queueMicrotask(() => titleInput.focus());
+    queueMicrotask(() => {
+      titleInput.focus();
+      titleInput.setSelectionRange(titleInput.value.length, titleInput.value.length);
+    });
 
     saveBtn.addEventListener('click', () => {
       updateTask(task.id, { title: titleInput.value, date: dateInput.value });
@@ -96,8 +99,12 @@ function renderTask(task) {
       if (e.key === 'Enter') saveBtn.click();
       if (e.key === 'Escape') cancelBtn.click();
     });
+    dateInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveBtn.click();
+      if (e.key === 'Escape') cancelBtn.click();
+    });
   } else {
-    // --- Обычный режим ---
+    // Обычный режим
     const title = document.createElement('span');
     title.className = 'task__title';
     title.textContent = task.title;
@@ -114,7 +121,7 @@ function renderTask(task) {
     body.append(title, date);
   }
 
-  // Кнопки действий
+  // Кнопки
   const editBtn = document.createElement('button');
   editBtn.type = 'button';
   editBtn.className = 'task__edit';
@@ -146,7 +153,6 @@ function formatDate(iso) {
 function addTask(title, date) {
   if (!title.trim()) return;
   const task = createTask(title, date);
-  // Новые — в конец (максимальный order + 1)
   const maxOrder = tasks.reduce((m, t) => Math.max(m, t.order), 0);
   task.order = maxOrder + 1;
   tasks.push(task);
@@ -159,7 +165,7 @@ function updateTask(id, patch) {
   if (!task) return;
   if (patch.title !== undefined) {
     const t = patch.title.trim();
-    if (!t) return; // не разрешаем пустое название
+    if (!t) return;
     task.title = t;
   }
   if (patch.date !== undefined) task.date = patch.date;
@@ -195,7 +201,12 @@ function persist() {
 // === События формы ===
 ui.form.addEventListener('submit', (e) => {
   e.preventDefault();
-  addTask(ui.taskInput.value, ui.dateInput.value);
+  const title = ui.taskInput.value;
+  if (!title.trim()) {
+    ui.taskInput.focus();
+    return;
+  }
+  addTask(title, ui.dateInput.value);
   ui.form.reset();
   ui.taskInput.focus();
 });
@@ -219,13 +230,17 @@ ui.clearDoneBtn.addEventListener('click', clearDone);
 
 // === Drag-and-drop ===
 enableDragAndDrop(ui.list, (orderedIds) => {
-  // Пересчитываем order согласно новому порядку
+  // Пересчитываем order только для видимых.
+  // Скрытые сохраняют свои order, но так как диапазон order
+  // у видимых мог "пересечься" со скрытыми — просто
+  // переустанавливаем order для видимых по индексу,
+  // а скрытым ничего не трогаем (их порядок относительно
+  // друг друга сохраняется).
   orderedIds.forEach((id, index) => {
     const t = tasks.find(x => x.id === id);
     if (t) t.order = index;
   });
   persist();
-  // Перерисовываем только если сортировка ручная
   if (state.sort === 'manual') render();
 });
 

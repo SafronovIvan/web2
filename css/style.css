@@ -1,55 +1,132 @@
-/* css/style.css */
-
-:root {
-  --color-bg: #f4f5f7;
-  --color-surface: #ffffff;
-  --color-text: #222;
-  --color-muted: #777;
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
-  --color-danger: #ef4444;
-  --color-success: #22c55e;
-  --color-border: #e2e5ea;
-  --radius: 10px;
-  --shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  --gap: 12px;
+/* ==================== СБРОС ==================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-* { box-sizing: border-box; }
+/* ==================== ПЕРЕМЕННЫЕ ==================== */
+:root {
+    --c-violet:      #7c3aed;
+    --c-violet-dark: #6d28d9;
+    --c-violet-soft: #ede9fe;
+    --c-pink:        #ec4899;
+    --c-orange:      #f97316;
+    --c-cyan:        #06b6d4;
+    --c-green:       #10b981;
+    --c-danger:      #ef4444;
+
+    --c-text:        #1d1d1f;
+    --c-text-muted:  #6b7280;
+    --c-surface:     #ffffff;
+    --c-border:      #e5e7eb;
+
+    --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md:  0 8px 24px rgba(124, 58, 237, 0.12);
+    --shadow-lg:  0 16px 40px rgba(124, 58, 237, 0.18);
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+}
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--color-bg);
-  color: var(--color-text);
-  min-height: 100vh;
-  padding: 24px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #eef2ff;
+    color: var(--c-text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+    padding: 24px 16px;
 }
 
-/* === APP LAYOUT === */
+/* ==================== ДЕКОРАТИВНЫЙ ФОН ==================== */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        radial-gradient(circle 480px at 8% 12%,
+            rgba(124, 58, 237, 0.40) 0%,
+            rgba(124, 58, 237, 0.12) 45%,
+            transparent 72%),
+        radial-gradient(circle 520px at 92% 20%,
+            rgba(236, 72, 153, 0.35) 0%,
+            rgba(236, 72, 153, 0.10) 48%,
+            transparent 75%),
+        radial-gradient(circle 560px at 50% 105%,
+            rgba(6, 182, 212, 0.40) 0%,
+            rgba(6, 182, 212, 0.12) 48%,
+            transparent 78%),
+        radial-gradient(circle 260px at 82% 82%,
+            rgba(249, 115, 22, 0.30) 0%,
+            transparent 70%),
+        radial-gradient(circle 220px at 15% 78%,
+            rgba(16, 185, 129, 0.25) 0%,
+            transparent 70%),
+        linear-gradient(180deg, #f5f3ff 0%, #eef2ff 40%, #e0f2fe 100%);
+
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+ul {
+    list-style: none;
+}
+
+input,
+select {
+    font-family: inherit;
+}
+
+/* ==================== APP LAYOUT ==================== */
 .app {
-  max-width: 720px;
-  margin: 0 auto;
-  display: grid;
-  gap: var(--gap);
-  background: var(--color-surface);
-  padding: 24px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 720px;
+    background: var(--c-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 28px;
+    display: grid;
+    gap: 16px;
 }
 
-.app__header { text-align: center; }
+/* ==================== HEADER ==================== */
+.app__header {
+    text-align: center;
+}
 
 .app__title {
-  margin: 0;
-  font-size: 1.75rem;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--c-violet) 0%, var(--c-pink) 60%, var(--c-orange) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-/* === FORM === */
+/* ==================== FORM ==================== */
 .task-form {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
 }
 
 .task-form__input,
@@ -57,162 +134,307 @@ body {
 .controls__search,
 .controls__filter,
 .controls__sort {
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  font: inherit;
-  background: var(--color-surface);
+    padding: 10px 12px;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    background: #fafafa;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    min-width: 0;
+}
+
+.task-form__input:focus,
+.task-form__date:focus,
+.controls__search:focus,
+.controls__filter:focus,
+.controls__sort:focus {
+    outline: none;
+    border-color: var(--c-violet);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
 }
 
 .task-form__submit {
-  padding: 10px 16px;
-  border: none;
-  border-radius: var(--radius);
-  background: var(--color-primary);
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
-  transition: background 0.15s;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--c-violet) 0%, var(--c-violet-dark) 100%);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.30);
+    transition: transform 0.15s, box-shadow 0.2s;
 }
-.task-form__submit:hover { background: var(--color-primary-hover); }
 
-/* === CONTROLS === */
+.task-form__submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+}
+
+/* ==================== CONTROLS ==================== */
 .controls {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 8px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 8px;
 }
 
-/* === LIST === */
+/* ==================== LIST ==================== */
 .task-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 8px;
+    display: grid;
+    gap: 8px;
 }
 
 .task-list__empty {
-  text-align: center;
-  color: var(--color-muted);
-  margin: 8px 0;
+    text-align: center;
+    color: var(--c-text-muted);
+    padding: 24px 0;
+    font-size: 0.95rem;
 }
 
-/* === TASK ITEM === */
+/* ==================== TASK ITEM ==================== */
 .task {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  transition: opacity 0.2s, transform 0.2s;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, #ffffff 0%, #fafaff 100%);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    cursor: grab;
+}
+
+.task:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.task:active {
+    cursor: grabbing;
 }
 
 .task__checkbox {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
+    width: 20px;
+    height: 20px;
+    accent-color: var(--c-violet);
+    cursor: pointer;
 }
 
 .task__body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
 }
 
 .task__title {
-  font-size: 1rem;
-  word-break: break-word;
+    font-size: 1rem;
+    font-weight: 500;
+    word-break: break-word;
 }
 
 .task__date {
-  font-size: 0.8rem;
-  color: var(--color-muted);
+    font-size: 0.8rem;
+    color: var(--c-text-muted);
 }
 
-.task__edit,
-.task__delete {
-  padding: 6px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: transparent;
-  font: inherit;
-  cursor: pointer;
+/* ==================== DONE STATE ==================== */
+.task--done {
+    opacity: 0.65;
+    background: #f9fafb;
 }
-.task__delete { color: var(--color-danger); }
 
-/* === DONE STATE === */
-.task--done { opacity: 0.6; }
 .task--done .task__title {
-  text-decoration: line-through;
-  color: var(--color-muted);
+    text-decoration: line-through;
+    color: var(--c-text-muted);
 }
 
-/* === EDIT MODE === */
-.task--editing .task__title { display: none; }
-.task__edit-row {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 6px;
-  width: 100%;
+/* ==================== EDIT MODE ==================== */
+.task--editing {
+    border-color: var(--c-violet);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+    cursor: default;
 }
+
+.task--editing .task__title,
+.task--editing .task__date {
+    display: none;
+}
+
+.task__edit-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 6px;
+    width: 100%;
+}
+
 .task__edit-input,
 .task__edit-date {
-  padding: 6px 8px;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font: inherit;
-  width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    width: 100%;
+    min-width: 0;
 }
 
-/* === DRAGGING === */
-.task--dragging { opacity: 0.4; }
-.task--over { border-color: var(--color-primary); }
+.task__edit-input:focus,
+.task__edit-date:focus {
+    outline: none;
+    border-color: var(--c-violet);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
 
-/* === FOOTER === */
+/* ==================== ACTION BUTTONS ==================== */
+.task__edit,
+.task__delete,
+.task__save,
+.task__cancel {
+    padding: 6px 10px;
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.task__edit {
+    color: var(--c-violet);
+}
+
+.task__edit:hover {
+    background: var(--c-violet-soft);
+    border-color: var(--c-violet);
+}
+
+.task__delete {
+    color: var(--c-danger);
+}
+
+.task__delete:hover {
+    background: #fee2e2;
+    border-color: var(--c-danger);
+}
+
+.task__save {
+    background: var(--c-violet);
+    color: #fff;
+    border-color: var(--c-violet);
+}
+
+.task__save:hover {
+    background: var(--c-violet-dark);
+}
+
+.task__cancel {
+    color: var(--c-text-muted);
+}
+
+.task__cancel:hover {
+    background: #f3f4f6;
+}
+
+/* ==================== DRAGGING ==================== */
+.task--dragging {
+    opacity: 0.35;
+    cursor: grabbing;
+}
+
+.task--over {
+    border-color: var(--c-violet);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+/* ==================== FOOTER ==================== */
 .app__footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding-top: 8px;
-  border-top: 1px solid var(--color-border);
-  font-size: 0.9rem;
-  color: var(--color-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--c-border);
+    font-size: 0.9rem;
+    color: var(--c-text-muted);
+    flex-wrap: wrap;
+}
+
+.app__counter {
+    font-weight: 500;
 }
 
 .app__clear-done {
-  padding: 6px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: transparent;
-  font: inherit;
-  cursor: pointer;
-  color: var(--color-danger);
+    padding: 8px 14px;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    color: var(--c-danger);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s;
 }
 
-/* === ADAPTIVE === */
-@media (max-width: 560px) {
-  .task-form {
-    grid-template-columns: 1fr;
-  }
-  .controls {
-    grid-template-columns: 1fr;
-  }
-  .task {
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "check body"
-      "actions actions";
-  }
-  .task__checkbox { grid-area: check; }
-  .task__body { grid-area: body; }
-  .task__edit,
-  .task__delete { grid-area: actions; }
-  .task__delete { justify-self: end; }
-  .app__footer { flex-direction: column; align-items: stretch; }
+.app__clear-done:hover {
+    background: #fee2e2;
+    border-color: var(--c-danger);
+}
+
+/* ==================== АДАПТИВ ==================== */
+
+/* Планшет и узкие экраны */
+@media (max-width: 640px) {
+    body {
+        padding: 16px 12px;
+    }
+
+    .app {
+        padding: 20px 16px;
+        border-radius: var(--radius-md);
+    }
+
+    .app__title {
+        font-size: 1.5rem;
+    }
+
+    /* Форма — в одну колонку */
+    .task-form {
+        grid-template-columns: 1fr;
+    }
+
+    /* Контролы — в одну колонку */
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    /* Задача: чекбокс + тело на первой строке, кнопки — на второй */
+    .task {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "check body"
+            "actions actions";
+        row-gap: 10px;
+    }
+
+    .task__checkbox { grid-area: check; align-self: start; margin-top: 2px; }
+    .task__body { grid-area: body; }
+    .task__edit { grid-area: actions; justify-self: start; }
+    .task__delete { grid-area: actions; justify-self: end; }
+
+    /* Кнопки в режиме редактирования растягиваются */
+    .task__edit-row {
+        grid-template-columns: 1fr auto auto;
+    }
+
+    .app__footer {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+}
+
+/* Очень узкие экраны */
+@media (max-width: 380px) {
+    .app__title {
+        font-size: 1.3rem;
+    }
 }

@@ -1,10 +1,5 @@
 // js/dragdrop.js
 
-/**
- * Включает drag-and-drop для элементов списка.
- * @param {HTMLElement} listEl — UL-контейнер
- * @param {(orderedIds: string[]) => void} onReorder — колбэк с новым порядком
- */
 export function enableDragAndDrop(listEl, onReorder) {
   let draggedEl = null;
 
@@ -14,7 +9,6 @@ export function enableDragAndDrop(listEl, onReorder) {
     draggedEl = item;
     item.classList.add('task--dragging');
     e.dataTransfer.effectAllowed = 'move';
-    // Firefox требует установить данные
     e.dataTransfer.setData('text/plain', item.dataset.id);
   });
 

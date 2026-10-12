@@ -4,6 +4,15 @@
  * Создаёт всю структуру страницы и возвращает ссылки на ключевые элементы.
  */
 export function buildUI() {
+  // Защита от повторного добавления <link>
+  if (!document.querySelector('link[data-app-style]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './css/style.css';
+    link.dataset.appStyle = '';
+    document.head.append(link);
+  }
+
   const app = document.createElement('main');
   app.className = 'app';
 
@@ -17,7 +26,7 @@ export function buildUI() {
 
   header.append(title);
 
-  // === FORM (добавление задачи) ===
+  // === FORM ===
   const form = document.createElement('form');
   form.className = 'task-form';
   form.setAttribute('novalidate', '');
@@ -42,7 +51,7 @@ export function buildUI() {
 
   form.append(taskInput, dateInput, submitBtn);
 
-  // === CONTROLS (поиск, фильтр, сортировка) ===
+  // === CONTROLS ===
   const controls = document.createElement('section');
   controls.className = 'controls';
 
@@ -56,12 +65,11 @@ export function buildUI() {
   filterSelect.className = 'controls__filter';
   filterSelect.setAttribute('aria-label', 'Фильтр по статусу');
 
-  const filterOptions = [
+  [
     { value: 'all', label: 'Все' },
     { value: 'active', label: 'Активные' },
     { value: 'done', label: 'Выполненные' },
-  ];
-  filterOptions.forEach(({ value, label }) => {
+  ].forEach(({ value, label }) => {
     const opt = document.createElement('option');
     opt.value = value;
     opt.textContent = label;
@@ -72,14 +80,13 @@ export function buildUI() {
   sortSelect.className = 'controls__sort';
   sortSelect.setAttribute('aria-label', 'Сортировка');
 
-  const sortOptions = [
+  [
     { value: 'manual', label: 'По порядку' },
     { value: 'date-asc', label: 'Дата ↑' },
     { value: 'date-desc', label: 'Дата ↓' },
     { value: 'title-asc', label: 'Название A→Z' },
     { value: 'title-desc', label: 'Название Z→A' },
-  ];
-  sortOptions.forEach(({ value, label }) => {
+  ].forEach(({ value, label }) => {
     const opt = document.createElement('option');
     opt.value = value;
     opt.textContent = label;
@@ -116,17 +123,8 @@ export function buildUI() {
 
   // === СБОРКА ===
   app.append(header, form, controls, list, empty, footer);
-
-  // === Подключение CSS динамически ===
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = './css/style.css';
-  document.head.append(link);
-
-  // Добавляем в body
   document.body.append(app);
 
-  // Возвращаем ссылки на элементы
   return {
     app,
     form,

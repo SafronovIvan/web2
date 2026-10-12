@@ -1,23 +1,16 @@
 // js/filters.js
 
-/**
- * @param {Array} tasks
- * @param {{ query: string, status: 'all'|'active'|'done', sort: string }} opts
- */
 export function applyFilters(tasks, { query, status, sort }) {
   let result = tasks.slice();
 
-  // Поиск по названию (регистронезависимо)
   if (query) {
     const q = query.toLowerCase().trim();
     result = result.filter(t => t.title.toLowerCase().includes(q));
   }
 
-  // Фильтр по статусу
   if (status === 'active') result = result.filter(t => !t.done);
   else if (status === 'done') result = result.filter(t => t.done);
 
-  // Сортировка
   switch (sort) {
     case 'date-asc':
       result.sort(compareByDate(1));
@@ -26,10 +19,10 @@ export function applyFilters(tasks, { query, status, sort }) {
       result.sort(compareByDate(-1));
       break;
     case 'title-asc':
-      result.sort((a, b) => a.title.localeCompare(b.title));
+      result.sort((a, b) => a.title.localeCompare(b.title, 'ru'));
       break;
     case 'title-desc':
-      result.sort((a, b) => b.title.localeCompare(a.title));
+      result.sort((a, b) => b.title.localeCompare(a.title, 'ru'));
       break;
     case 'manual':
     default:
@@ -42,7 +35,6 @@ export function applyFilters(tasks, { query, status, sort }) {
 
 function compareByDate(dir) {
   return (a, b) => {
-    // Задачи без даты — в конец
     if (!a.date && !b.date) return 0;
     if (!a.date) return 1;
     if (!b.date) return -1;
